@@ -1,0 +1,58 @@
+# Unreal Engine generated project files and build output
+/Binaries/
+/Intermediate/
+/DerivedDataCache/
+/Saved/
+*.sln
+*.slnx
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.opendb
+*.VC.VC.opendb
+
+# Local IDE settings and caches
+/AGENTS.md
+/.vs/
+/.vscode/
+/.idea/
+*.suo
+*.user
+*.userprefs
+*.userosscache
+*.sln.docstates
+
+# Operating system temporary files
+.DS_Store
+Thumbs.db
+Desktop.ini
+desktop.ini
+*~
+*.swp
+*.swo
+*.log
+*.tmp
+
+# Generated files inside source plugins (same rules as WantedFPS)
+/Plugins/*/Binaries/
+/Plugins/*/Intermediate/
+
+# Visual Studio Unreal integration plugin
+/Plugins/VisualStudioTools/
+
+# Local credentials and environment configuration
+/.aws/
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Third-party assets: install locally instead of publishing source assets
+/Content/NeonGrid/
+
+# Keep Source/, own Content assets, Config/, Build/, Plugins/, and the .uproject file.
+# Content includes .uasset, .umap, and World Partition external actors.
+# Build/ can contain custom icons and packaging resources.
