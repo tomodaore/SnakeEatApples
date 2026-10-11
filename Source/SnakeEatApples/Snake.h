@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Snake.generated.h"
 #include "TimerManager.h"
+#include "Snake.generated.h"
 
 class USceneComponent;
 class UStaticMeshComponent;
 class AASnakeBoard;
+class FString;
 
 UCLASS()
 class SNAKEEATAPPLES_API ASnake : public AActor
@@ -38,10 +39,11 @@ protected:
 	FIntPoint StartCell = FIntPoint(0, 0);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Snake", meta = (ClampMin = "0.05"))
-	float MovwInterval = 0.5f;
+	float MoveInterval = 0.4f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Snake")
 	float HeadHeight = 50.0f;
+
 
 private:
 	FIntPoint HeadCell = FIntPoint::ZeroValue;
@@ -51,6 +53,7 @@ private:
 
 	void MoveOneCell();
 	void UpdateHeadPosition();
+	void StartMoving();
 
 
 public:	
