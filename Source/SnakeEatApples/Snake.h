@@ -21,6 +21,8 @@ public:
 	// Sets default values for this actor's properties
 	ASnake();
 
+	void RequestDirection(FIntPoint NewDirection);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -48,6 +50,8 @@ protected:
 private:
 	FIntPoint HeadCell = FIntPoint::ZeroValue;
 	FIntPoint Direction = FIntPoint(1, 0);
+
+	bool bDirectionChangedThisStep = false;
 
 	FTimerHandle MoveTimerHandle;
 

@@ -8,6 +8,9 @@
 
 class UCameraComponent;
 class USceneComponent;
+class ASnake;
+class UInputAction;
+class UInputMappingContext;
 
 UCLASS()
 class SNAKEEATAPPLES_API ASnakeCameraPawn : public APawn
@@ -30,6 +33,32 @@ protected:
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Board")
 	TObjectPtr<AActor> BoardFloor;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Snake")
+	TObjectPtr<ASnake> ControlledSnake;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputMappingContext> SnakeMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> UpAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> DownAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> LeftAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> RightAction;
+
+
+private:
+	void TurnUp();
+	void TurnDown();
+	void TurnRight();
+	void TurnLeft();
+
 
 public:	
 	// Called every frame

@@ -4,6 +4,13 @@
 #include "SnakeCameraPawn.h"
 #include "Camera/CameraComponent.h"
 #include "Components/SceneComponent.h"
+#include "Snake.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "Engine/LocalPlayer.h"
+#include "GameFramework/PlayerController.h"
+#include "InputAction.h"
+#include "InputMappingContext.h"
 
 // Sets default values
 ASnakeCameraPawn::ASnakeCameraPawn()
@@ -70,5 +77,61 @@ void ASnakeCameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+
+	if (!EnhancedInput || !PlayerController) {
+		return;
+	}
+
+	if (!IsValid(SnakeMappingContext)
+		|| !IsValid(UpAction)
+		|| !IsValid(DownAction)
+		|| !IsValid(LeftAction)
+		|| !IsValid(RightAction)) {
+		UE_LOG(LogTemp, Warning, TEXT("Snake input assets are not assigned."));
+		return;
+	}
+
+	ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
+
+	if (!LocalPlayer) {
+		return;
+	}
+
+	UEnhancedInputLocalPlayerSubsystem* InputSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+
+	if (!InputSubsystem) {
+		return;
+	}
+
+	InputSubsystem->AddMappingContext(SnakeMappingContext, 0);
+	EnhancedInput->BindAction(UpAction, ETriggerEvent::Started, this, &ASnakeCameraPawn::TurnUp);
+	EnhancedInput->BindAction(DownAction, ETriggerEvent::Started, this, &ASnakeCameraPawn::TurnDown);
+	EnhancedInput->BindAction(LeftAction, ETriggerEvent::Started, this, &ASnakeCameraPawn::TurnLeft);
+	EnhancedInput->BindAction(RightAction, ETriggerEvent::Started, this, &ASnakeCameraPawn::TurnRight);
+
+	
+
 }
 
+void ASnakeCameraPawn::TurnUp() {
+	if (IsValid(ControlledSnake)) {
+		ControlledSnake->RequestDirection(FIntPoint(1, 0));
+	}
+}
+void ASnakeCameraPawn::TurnDown() {
+	if (IsValid(ControlledSnake)) {
+		ControlledSnake->RequestDirection(FIntPoint(-1, 0));
+	}
+}
+void ASnakeCameraPawn::TurnRight() {
+	if (IsValid(ControlledSnake)) {
+		ControlledSnake->RequestDirection(FIntPoint(0, 1));
+	}
+}
+void ASnakeCameraPawn::TurnLeft() {
+	if (IsValid(ControlledSnake)) {
+		ControlledSnake->RequestDirection(FIntPoint(0, -1));
+	}
+}

@@ -44,7 +44,7 @@ void ASnake::BeginPlay()
 	UpdateHeadPosition();
 
 	// ŠJŽn“ñ•bŽ~‚Ü‚é
-	GetWorldTimerManager().SetTimer(MoveTimerHandle, this, &ASnake::StartMoving, 2.0f, false);
+	//GetWorldTimerManager().SetTimer(MoveTimerHandle, this, &ASnake::StartMoving, 2.0f, false);
 
 
 	GetWorldTimerManager().SetTimer(MoveTimerHandle, this, &ASnake::MoveOneCell, MoveInterval, true);
@@ -67,6 +67,8 @@ void ASnake::MoveOneCell() {
 	}
 	HeadCell = NextCell;
 	UpdateHeadPosition();
+
+	bDirectionChangedThisStep = false;
 }
 
 void ASnake::UpdateHeadPosition() {
@@ -79,6 +81,28 @@ void ASnake::UpdateHeadPosition() {
 void ASnake::StartMoving() {
 	
 	GetWorldTimerManager().SetTimer(MoveTimerHandle, this, &ASnake::MoveOneCell, MoveInterval, true);
+}
+
+void ASnake::RequestDirection(FIntPoint NewDirection) {
+	if (FMath::Abs(NewDirection.X) + FMath::Abs(NewDirection.Y) != 1) {
+		return;
+	}
+
+	if (bDirectionChangedThisStep) {
+		return;
+	}
+
+	if (NewDirection == Direction) {
+		return;
+	}
+
+	const FIntPoint OppositeDirection(-Direction.X, -Direction.Y);
+	if (NewDirection == OppositeDirection) {
+		return;
+	}
+
+	Direction = NewDirection;
+	bDirectionChangedThisStep = true;
 }
 
 void ASnake::EndPlay(const EEndPlayReason::Type EndPlayReason) {
