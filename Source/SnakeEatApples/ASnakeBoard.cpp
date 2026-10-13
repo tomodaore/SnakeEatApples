@@ -71,6 +71,13 @@ void AASnakeBoard::DrawDebugGrid() const
 
 }
 
+FIntPoint AASnakeBoard::GetRandomCell(FIntPoint HeadCell) const {
+	FIntPoint Cell = FIntPoint(0, 0);
+	while (Cell != HeadCell) {
+		Cell = FIntPoint(FMath::RandRange(0, Columns - 1), FMath::RandRange(0, Rows - 1));
+	}
+}
+
 // Called every frame
 void AASnakeBoard::Tick(float DeltaTime)
 {

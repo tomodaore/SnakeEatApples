@@ -52,6 +52,7 @@ desktop.ini
 
 # Third-party assets: install locally instead of publishing source assets
 /Content/NeonGrid/
+/Content/Fab/
 
 # Keep Source/, own Content assets, Config/, Build/, Plugins/, and the .uproject file.
 # Content includes .uasset, .umap, and World Partition external actors.

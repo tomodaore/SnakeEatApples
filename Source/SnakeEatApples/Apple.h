@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Apple.generated.h"
 
+class AASnakeBoard;
+
 UCLASS()
 class SNAKEEATAPPLES_API AApple : public AActor
 {
@@ -14,6 +16,8 @@ class SNAKEEATAPPLES_API AApple : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AApple();
+	FIntPoint GetCell() const { return AppleCell; }
+	void SetApplePosition(FIntPoint HeadCell);
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -24,6 +28,16 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Apple")
 	float RotationSpeed = 90.0f; // 回転速度（度/秒）
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Board")
+	TObjectPtr<AASnakeBoard> Board;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Apple")
+	float AppleHeight = 50.0f;
+
+
+private:
+	FIntPoint AppleCell = FIntPoint::ZeroValue;
 	
 protected:
 	// Called when the game starts or when spawned

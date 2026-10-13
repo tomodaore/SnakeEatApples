@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TimerManager.h"
 #include "Snake.generated.h"
 
 class USceneComponent;
 class UStaticMeshComponent;
 class AASnakeBoard;
 class FString;
+class AApple;
 
 UCLASS()
 class SNAKEEATAPPLES_API ASnake : public AActor
@@ -21,12 +21,13 @@ public:
 	// Sets default values for this actor's properties
 	ASnake();
 
-	void RequestDirection(FIntPoint NewDirection);
+	bool RequestDirection(FIntPoint NewDirection);
+	void MoveOneCell();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	//virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USceneComponent> SceneRoot;
@@ -40,11 +41,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Snake")
 	FIntPoint StartCell = FIntPoint(0, 0);
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Snake", meta = (ClampMin = "0.05"))
-	float MoveInterval = 0.4f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Snake")
 	float HeadHeight = 50.0f;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Snake")
+	TObjectPtr<AApple> Apple;
 
 
 private:
@@ -53,11 +54,9 @@ private:
 
 	bool bDirectionChangedThisStep = false;
 
-	FTimerHandle MoveTimerHandle;
-
-	void MoveOneCell();
+	void UpdateRotation(FIntPoint ChangeRotation);
 	void UpdateHeadPosition();
-	void StartMoving();
+	void SetApplePosition();
 
 
 public:	

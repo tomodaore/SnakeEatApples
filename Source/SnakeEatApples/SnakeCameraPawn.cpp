@@ -116,22 +116,26 @@ void ASnakeCameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 }
 
 void ASnakeCameraPawn::TurnUp() {
-	if (IsValid(ControlledSnake)) {
-		ControlledSnake->RequestDirection(FIntPoint(1, 0));
+	if (IsValid(ControlledSnake) && ControlledSnake->RequestDirection(FIntPoint(1, 0))) {
+
+		ControlledSnake->MoveOneCell();
 	}
 }
 void ASnakeCameraPawn::TurnDown() {
-	if (IsValid(ControlledSnake)) {
-		ControlledSnake->RequestDirection(FIntPoint(-1, 0));
+	if (IsValid(ControlledSnake) && ControlledSnake->RequestDirection(FIntPoint(-1, 0))) {
+	
+		ControlledSnake->MoveOneCell();
 	}
 }
 void ASnakeCameraPawn::TurnRight() {
-	if (IsValid(ControlledSnake)) {
-		ControlledSnake->RequestDirection(FIntPoint(0, 1));
+	if (IsValid(ControlledSnake) && ControlledSnake->RequestDirection(FIntPoint(0, 1))) {
+	
+		ControlledSnake->MoveOneCell();
 	}
 }
 void ASnakeCameraPawn::TurnLeft() {
-	if (IsValid(ControlledSnake)) {
-		ControlledSnake->RequestDirection(FIntPoint(0, -1));
+	if (IsValid(ControlledSnake) && ControlledSnake->RequestDirection(FIntPoint(0,-1))) {
+	
+		ControlledSnake->MoveOneCell();
 	}
 }

@@ -4,6 +4,7 @@
 #include "Apple.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "ASnakeBoard.h"
 
 // Sets default values
 AApple::AApple()
@@ -22,7 +23,25 @@ AApple::AApple()
 void AApple::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (!IsValid(Board)) {
+		UE_LOG(LogTemp, Warning, TEXT("Apple:Board is not assigned."));
+		return;
+	}
+
+	SetApplePosition();
 	
+}
+
+void AApple::SetApplePosition(FIntPoint HeadCell) {
+	if (!IsValid(Board)) {
+		return;
+	}
+	AppleCell = Board->GetRandomCell(HeadCell);
+	const FVector CellPosition = Board->CellToWorld(AppleCell);
+	const FVector ApplePositon = CellPosition + Board->GetActorUpVector() * AppleHeight;
+	SetActorLocation(ApplePositon);
+	return;
 }
 
 // Called every frame

@@ -5,6 +5,7 @@
 #include "ASnakeBoard.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Apple.h"
 
 // Sets default values
 ASnake::ASnake()
@@ -39,77 +40,93 @@ void ASnake::BeginPlay()
 		return;
 	}
 
-
+	UpdateRotation(Direction);
 	HeadCell = StartCell;
 	UpdateHeadPosition();
-
-	// ŠJŽn“ñ•bŽ~‚Ü‚é
-	//GetWorldTimerManager().SetTimer(MoveTimerHandle, this, &ASnake::StartMoving, 2.0f, false);
-
-
-	GetWorldTimerManager().SetTimer(MoveTimerHandle, this, &ASnake::MoveOneCell, MoveInterval, true);
-
-
 	
 }
 
 void ASnake::MoveOneCell() {
 	if(!IsValid(Board)) {
-		GetWorldTimerManager().ClearTimer(MoveTimerHandle);
 		return;
 	}
 
 	const FIntPoint NextCell = HeadCell + Direction;
 
 	if (!Board->IsValidCell(NextCell)) {
-		GetWorldTimerManager().ClearTimer(MoveTimerHandle);
 		return;
+	}
+	if (bDirectionChangedThisStep) {
+		UpdateRotation(Direction);
 	}
 	HeadCell = NextCell;
 	UpdateHeadPosition();
-
 	bDirectionChangedThisStep = false;
+
+	if (IsValid(Apple) && HeadCell == Apple->GetCell()) {
+		UE_LOG(LogTemp, Warning, TEXT("Snake ate the Apple."));
+		SetApplePosition(HeadCell);
+	}
 }
 
 void ASnake::UpdateHeadPosition() {
 	const FVector CellPosition = Board->CellToWorld(HeadCell);
 	const FVector HeadPosition = CellPosition + Board->GetActorUpVector() * HeadHeight;
 	SetActorLocation(HeadPosition);
-	UE_LOG(LogTemp, Warning, TEXT("Snake: HeadCell = (%s)"), *CellPosition.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Snake: HeadCell = (%s)"), *CellPosition.ToString());
 }
 
-void ASnake::StartMoving() {
-	
-	GetWorldTimerManager().SetTimer(MoveTimerHandle, this, &ASnake::MoveOneCell, MoveInterval, true);
-}
 
-void ASnake::RequestDirection(FIntPoint NewDirection) {
+bool ASnake::RequestDirection(FIntPoint NewDirection) {
 	if (FMath::Abs(NewDirection.X) + FMath::Abs(NewDirection.Y) != 1) {
-		return;
-	}
-
-	if (bDirectionChangedThisStep) {
-		return;
-	}
-
-	if (NewDirection == Direction) {
-		return;
+		return false;
 	}
 
 	const FIntPoint OppositeDirection(-Direction.X, -Direction.Y);
 	if (NewDirection == OppositeDirection) {
-		return;
+		return false;
+	}
+
+	if (!Board->IsValidCell(HeadCell + Direction)) {
+		return false;
+	}
+
+	if (Direction != NewDirection) {
+		bDirectionChangedThisStep = true;
 	}
 
 	Direction = NewDirection;
-	bDirectionChangedThisStep = true;
+	return true;
 }
 
-void ASnake::EndPlay(const EEndPlayReason::Type EndPlayReason) {
-	GetWorldTimerManager().ClearTimer(MoveTimerHandle);
-	Super::EndPlay(EndPlayReason);
-
+void ASnake::UpdateRotation(FIntPoint ChangeRotation) {
+	if (ChangeRotation == FIntPoint(1, 0)) {
+		// Up
+		SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
+	}
+	else if (ChangeRotation == FIntPoint(-1, 0)) {
+		// Down
+		SetActorRotation(FRotator(0.0f, 180.0f, 0.0f));
+	}
+	else if (ChangeRotation == FIntPoint(0, 1)) {
+		// Right
+		SetActorRotation(FRotator(0.0f, 90.0f, 0.0f));
+	}
+	else {
+		// Left
+		SetActorRotation(FRotator(0.0f, -90.0f, 0.0f));
+	}
 }
+
+void ASnake::SetApplePosition() {
+	Apple->SetApplePosition();
+}
+
+//void ASnake::EndPlay(const EEndPlayReason::Type EndPlayReason) {
+//	GetWorldTimerManager().ClearTimer(MoveTimerHandle);
+//	Super::EndPlay(EndPlayReason);
+//
+//}
 // Called every frame
 void ASnake::Tick(float DeltaTime)
 {
