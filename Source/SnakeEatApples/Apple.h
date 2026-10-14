@@ -17,7 +17,7 @@ public:
 	// Sets default values for this actor's properties
 	AApple();
 	FIntPoint GetCell() const { return AppleCell; }
-	void SetApplePosition(FIntPoint HeadCell);
+	void SetApplePosition(const TArray<FIntPoint>& OccupiedCells);
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")

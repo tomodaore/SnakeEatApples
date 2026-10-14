@@ -71,11 +71,22 @@ void AASnakeBoard::DrawDebugGrid() const
 
 }
 
-FIntPoint AASnakeBoard::GetRandomCell(FIntPoint HeadCell) const {
-	FIntPoint Cell = FIntPoint(0, 0);
-	while (Cell != HeadCell) {
-		Cell = FIntPoint(FMath::RandRange(0, Columns - 1), FMath::RandRange(0, Rows - 1));
+FIntPoint AASnakeBoard::GetRandomCell(const TArray<FIntPoint>& OccupiedCells) const {
+	TArray<FIntPoint> FreeCells;
+	for (int32 X = 0; X < Columns; X++) {
+		for (int32 Y = 0; Y < Rows; Y++) {
+			const FIntPoint Cell(X, Y);
+			if (!OccupiedCells.Contains(Cell)) {
+				FreeCells.Add(Cell);
+			}
+		}
 	}
+	if (FreeCells.IsEmpty()) {
+		return FIntPoint(-1, -1);
+	}
+	const int32 RandomIndex = FMath::RandRange(0, FreeCells.Num() - 1);
+
+	return FreeCells[RandomIndex];
 }
 
 // Called every frame

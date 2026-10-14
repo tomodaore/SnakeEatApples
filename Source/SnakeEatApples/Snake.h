@@ -24,6 +24,10 @@ public:
 	bool RequestDirection(FIntPoint NewDirection);
 	void MoveOneCell();
 
+	// For Test
+	FIntPoint GetHeadCell() const { return HeadCell; }
+	int32 GetLength() const { return SnakeCells.Num(); }
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -47,6 +51,20 @@ protected:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Snake")
 	TObjectPtr<AApple> Apple;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UInstancedStaticMeshComponent> BodyMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Snake")
+	float BodyScale = 0.8f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	
+	TObjectPtr<UInstancedStaticMeshComponent> BodyMeshCurveLeft;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	
+	TObjectPtr<UInstancedStaticMeshComponent> BodyMeshCurveRight;
+
 
 private:
 	FIntPoint HeadCell = FIntPoint::ZeroValue;
@@ -56,7 +74,10 @@ private:
 
 	void UpdateRotation(FIntPoint ChangeRotation);
 	void UpdateHeadPosition();
-	void SetApplePosition();
+
+	TArray<FIntPoint> SnakeCells;
+	bool CanEnterCell(FIntPoint NextCell) const;
+	void UpdateBodyMeshes();
 
 
 public:	

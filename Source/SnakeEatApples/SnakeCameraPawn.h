@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "TimerManager.h" // For Test
 #include "SnakeCameraPawn.generated.h"
 
 class UCameraComponent;
@@ -52,12 +53,29 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> RightAction;
 
+	// For Test
+	UPROPERTY(EditInstanceOnly, Category = "Auto Test")
+	
+	bool bAutoTest = false;
+
+	UPROPERTY(EditAnywhere, Category = "Auto Test",meta = (ClampMin = "0.02"))
+	
+	float AutoStepInterval = 0.1f;
+
 
 private:
 	void TurnUp();
 	void TurnDown();
 	void TurnRight();
 	void TurnLeft();
+
+	// For Test
+
+	TArray<FIntPoint> AutoRoute;
+	FTimerHandle AutoMoveTimer;
+
+	void StartAutoTest();
+	void AutoMoveOneCell();
 
 
 public:	

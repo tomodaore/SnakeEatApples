@@ -21,7 +21,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Board")
 	bool IsValidCell(FIntPoint Cell) const;
 
-	FIntPoint GetRandomCell(FIntPoint HeadCell) const;
+	FIntPoint GetRandomCell(const TArray<FIntPoint>& OccupiedCells) const;
 
 protected:
 	// Called when the game starts or when spawned

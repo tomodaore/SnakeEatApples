@@ -29,18 +29,24 @@ void AApple::BeginPlay()
 		return;
 	}
 
-	SetApplePosition();
 	
 }
 
-void AApple::SetApplePosition(FIntPoint HeadCell) {
+void AApple::SetApplePosition(const TArray<FIntPoint>& OccupiedCells) {
+
 	if (!IsValid(Board)) {
 		return;
 	}
-	AppleCell = Board->GetRandomCell(HeadCell);
-	const FVector CellPosition = Board->CellToWorld(AppleCell);
-	const FVector ApplePositon = CellPosition + Board->GetActorUpVector() * AppleHeight;
-	SetActorLocation(ApplePositon);
+	AppleCell = Board->GetRandomCell(OccupiedCells);
+	if (!Board->IsValidCell(AppleCell)) {
+		SetActorHiddenInGame(true);
+		UE_LOG(LogTemp, Warning, TEXT("No free cell remains."));
+		return;
+	}
+
+	SetActorHiddenInGame(false);
+	const FVector Position = Board->CellToWorld(AppleCell) + Board->GetActorUpVector() * AppleHeight;
+	SetActorLocation(Position);
 	return;
 }
 
